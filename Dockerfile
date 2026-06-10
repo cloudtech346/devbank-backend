@@ -1,15 +1,13 @@
-FROM node:16
+FROM node:18
 
-ENV HOME=/home/app
+WORKDIR /app
 
-COPY package.json $HOME/node_docker/
+COPY package*.json ./
 
-WORKDIR $HOME/node_docker
+RUN npm install
 
-RUN npm install --silent --progress=false
+COPY . .
 
-COPY . $HOME/node_docker
+EXPOSE 5000
 
-EXPOSE 3000
-
-CMD ["npm", "start"]
+CMD ["npm","start"]
