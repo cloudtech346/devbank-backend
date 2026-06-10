@@ -3,19 +3,17 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - echo Login to Amazon ECR
-      - aws --version
+      - echo Logging in to Amazon ECR
       - ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
       - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com
 
   build:
     commands:
       - echo Build started
-      - ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-      - docker build -t devbank-frontend .
-      - docker tag devbank-frontend:latest $ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/devbank-frontend:latest
+      - docker build -t devbank-backend .
 
   post_build:
     commands:
       - ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-      - docker push $ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/devbank-frontend:latest
+      - docker tag devbank-backend:latest $ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/devbank-backend:latest
+      - docker push $ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/devbank-backend:latest
